@@ -242,11 +242,13 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
         // TODO add your handling code here:
         inputTextArea.setText("");
         inputTextArea.requestFocus();
+        CariTextField.setText("");
         
         kataLabel.setText("Jumlah Kata : ");
         KarakterLabel.setText("Jumlah Karakter : ");
         KalimatLabel.setText("Jumlah Kalimat : ");
         ParagrafLabel.setText("Jumlah Paragraf : ");
+        HasilCariLabel.setText("Hasil Pencarian : ");
     }//GEN-LAST:event_ResetButtonActionPerformed
 
     private void CariButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CariButtonActionPerformed
