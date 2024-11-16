@@ -1,5 +1,14 @@
 
 import static java.awt.SystemColor.text;
+import java.awt.TextArea;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -17,6 +26,23 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
      */
     public AplikasiPenghitungKata() {
         initComponents();
+        inputTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                hitung();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                hitung();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                hitung();
+            }
+        });
+        
     }
 
     /**
@@ -40,11 +66,12 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
         KeluarButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         inputTextArea = new javax.swing.JTextArea();
-        jTextField1 = new javax.swing.JTextField();
+        CariTextField = new javax.swing.JTextField();
         SimpanButton = new javax.swing.JButton();
         KarakterLabel = new javax.swing.JLabel();
         KalimatLabel = new javax.swing.JLabel();
         ParagrafLabel = new javax.swing.JLabel();
+        HasilCariLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -68,8 +95,18 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
         });
 
         ResetButton.setText("Reset");
+        ResetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ResetButtonActionPerformed(evt);
+            }
+        });
 
         CariButton.setText("Cari");
+        CariButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CariButtonActionPerformed(evt);
+            }
+        });
 
         KeluarButton.setText("Keluar");
         KeluarButton.addActionListener(new java.awt.event.ActionListener() {
@@ -83,12 +120,19 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
         jScrollPane1.setViewportView(inputTextArea);
 
         SimpanButton.setText("Simpan");
+        SimpanButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SimpanButtonActionPerformed(evt);
+            }
+        });
 
         KarakterLabel.setText("Jumlah Karakter :");
 
         KalimatLabel.setText("Jumlah Kalimat :");
 
         ParagrafLabel.setText("Jumlah Paragraf :");
+
+        HasilCariLabel.setText("Hasil Pencarian : ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -104,13 +148,6 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(112, 112, 112)
                         .addComponent(kataLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(133, 133, 133)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(CariButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(121, 121, 121)
                         .addComponent(HitungButton)
@@ -128,7 +165,17 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
                             .addContainerGap()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(KalimatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ParagrafLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(ParagrafLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(133, 133, 133)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(HasilCariLabel)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(CariTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(CariButton)))))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -157,9 +204,11 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CariTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(CariButton))
-                .addGap(37, 37, 37))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(HasilCariLabel)
+                .addGap(15, 15, 15))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -172,6 +221,7 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void KeluarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KeluarButtonActionPerformed
         // TODO add your handling code here:
         System.exit(0);
@@ -182,6 +232,27 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
         hitung();
         
     }//GEN-LAST:event_HitungButtonActionPerformed
+
+    private void SimpanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SimpanButtonActionPerformed
+        // TODO add your handling code here:
+        simpan();
+    }//GEN-LAST:event_SimpanButtonActionPerformed
+
+    private void ResetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetButtonActionPerformed
+        // TODO add your handling code here:
+        inputTextArea.setText("");
+        inputTextArea.requestFocus();
+        
+        kataLabel.setText("Jumlah Kata : ");
+        KarakterLabel.setText("Jumlah Karakter : ");
+        KalimatLabel.setText("Jumlah Kalimat : ");
+        ParagrafLabel.setText("Jumlah Paragraf : ");
+    }//GEN-LAST:event_ResetButtonActionPerformed
+
+    private void CariButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CariButtonActionPerformed
+        // TODO add your handling code here:
+        cari();
+    }//GEN-LAST:event_CariButtonActionPerformed
 
     
     
@@ -197,6 +268,48 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
         KalimatLabel.setText("Jumlah Kalimat : "+jumlahKalimat);
         ParagrafLabel.setText("Jumlah Paragraf : "+jumlahparagraf);
         
+    }
+    
+    private void simpan(){
+        String input = inputTextArea.getText();
+        try (BufferedWriter output = new BufferedWriter(new FileWriter("hasil_hitung.txt"))) { 
+            output.write("Teks :\n"+input+"\n\n");
+            output.write(kataLabel.getText()+"\n");
+            output.write(KarakterLabel.getText()+"\n");
+            output.write(KalimatLabel.getText()+"\n");
+            output.write(ParagrafLabel.getText()+"\n");
+            JOptionPane.showMessageDialog(this, "Data berhasil disimpan ke file hasil_hitung.txt");
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "gagal menyimpan : ");
+        }
+    }
+    
+    private void cari(){
+        String input = inputTextArea.getText();
+        String cari = CariTextField.getText();
+        
+        if (cari.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Hasil pencarian invalid");
+            return;
+        }
+        
+        int indeks=0;
+        int kemunculan=0;
+        
+        Highlighter highlighter = inputTextArea.getHighlighter();
+        highlighter.removeAllHighlights();
+        
+        while ((indeks = input.indexOf(cari,indeks)) != -1) {
+            kemunculan++;
+            try {
+                highlighter.addHighlight(indeks, indeks+cari.length(), new  DefaultHighlighter.DefaultHighlightPainter(java.awt.Color.magenta));
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+            indeks +=  cari.length();
+        }
+        HasilCariLabel.setText("Hasil Pencarian : "+ kemunculan + " kemunculan di temukan");
     }
     
     /**
@@ -236,6 +349,8 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CariButton;
+    private javax.swing.JTextField CariTextField;
+    private javax.swing.JLabel HasilCariLabel;
     private javax.swing.JButton HitungButton;
     private javax.swing.JLabel KalimatLabel;
     private javax.swing.JLabel KarakterLabel;
@@ -252,7 +367,6 @@ public class AplikasiPenghitungKata extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel kataLabel;
     // End of variables declaration//GEN-END:variables
 }
